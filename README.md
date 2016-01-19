@@ -1,2 +1,2 @@
 # grav-plugin-import
-Used to allow importing of yaml files into grav pages
+This plugin is used to allow importing of yaml files for use in templates
