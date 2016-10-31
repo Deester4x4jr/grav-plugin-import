@@ -1,14 +1,14 @@
 # Grav Import Plugin
 
-This plugin allows importing of user-defined YAML files to facilitate custom actions/settings.
+This plugin allows you to import YAML and JSON files into the header of your pages, facilitating custom actions/settings.
 
-There are no dependancies
+There are no dependencies
 
-# Installation
+## Installation
 
 Installing the Import plugin can be done in one of two ways. Using the GPM (Grav Package Manager), manual installation via a zip file.
 
-## GPM Installation (Preferred)
+### GPM Installation (Preferred)
 
 The simplest way to install this plugin is via the [Grav Package Manager (GPM)](http://learn.getgrav.org/advanced/grav-gpm) through your system's Terminal (also called the command line). From the root of your Grav install type:
 
@@ -16,7 +16,7 @@ The simplest way to install this plugin is via the [Grav Package Manager (GPM)](
 
 This will install the Import plugin into your `/user/plugins` directory within Grav. Its files can be found under `/your/site/grav/user/plugins/import`.
 
-## Manual Installation
+### Manual Installation
 
 To manually install this plugin, just download the zip version of this repository and unzip it under `/your/site/grav/user/plugins`. Then, rename the folder to `import`. You can find these files either on [GitHub](https://github.com/Deester4x4jr/grav-plugin-import) or via [GetGrav.org](http://getgrav.org/downloads/plugins).
 
@@ -24,48 +24,65 @@ You should now have all the plugin files under
 
     /your/site/grav/user/plugins/import
 
-# Configuration
+## Configuration
 
 There are currently no settings to configure for this plugin.  In the future, user settings may become available.  If so, `import` will allow you to use the Grav Admin Plugin to adjust these settings as needed.
 
-# Usage
+## Usage
 
-To use `import`, you will need to trigger the plugin by adding an `imports:` declaration in the header of the page you need to load the YAML file(s) for:
+  * Add an `imports` field to your page header. You can include a a single file:
+    
+    ```yaml
+    imports: 'file1.yaml'
+    ``` 
 
-#### Single YAML file
+    Or you can add multiple files:
+
+    ```yaml
+    imports:
+      - 'file1.yaml'
+      - 'data:file2.json'
+    ```
+
+    When multiple files are requested, the first part of the given string (without the extension and without any leading `data:` part) becomes the key.
+
+  * File names must end in either `.yaml` or `.json`, otherwise they are ignored.
+
+  * By default, the plugin looks for files in the same folder as the page itself. But you can prefix filenames with `data:` to anchor your search in the `user/data` folder.
+
+  * The imported data becomes a part of `page.header.imports`, which can be accessed via Twig.
+
+The contents of these files is up to you, and you will need to determine how you are going to use them in your code.  The goal is to make the data in the YAML files available to themes and plugins to expand the functionality of Grav in an open-ended fashion.
+
+### Examples
+
+#### Single file
+
 ```
----
-title: 'Some Page'
 imports: 'file.yaml'
----
-
-# {{ page.title }}
 ```
 
-#### Array of YAML files
+The plugin would look for `file.yaml` in the same folder as the page file. The data would be available via Twig as `{{ page.header.imports.X }}`.
+
+#### Multiple files
+
 ```
----
-title: 'Some Page'
 imports:
-    - 'file.yaml'
-    - 'file2.yaml'
----
-
-# {{ page.title }}
+    - 'file1.yaml'
+    - 'data:scratch/file2.json'
 ```
 
-`import` will parse these YAML files and inject the contents into the page header as an array.  To see the output, [Enable the Debug Bar](http://learn.getgrav.org/advanced/debugging#debug-bar) and execute `{{ dump(header.imports) }}` somewhere in your twig template, and you should see something like the following:
+The plugin would look for `file1.yaml` in the same folder as the page file. It would look for `file2.json` in `user/data/scratch`. The data would available as `{{ page.header.imports.file1.X }}` and `{{ page.header.imports['scratch/file2'] }}`.
 
-![DebugBar](assets/debugBar_1.png)
+## Caveats
 
+While the plugin attempts to sanitize file names (eliminating double periods, stripping leading slashes, etc.), it cannot catch all situations. In a multiuser environment, plugins like this one could potentially make it possible for a user to read data from paths you do not expect. Do not install this plugin in such environments without taking proper precautions. Pull requests strengthening the sanitize feature are warmly welcomed.
 
-The contents of these files is up to you, and you will need to determine how you are going to utilize them in your code.  The goal is to make the data in the YAML files available to themes and plugins to expand the functionality of Grav in an open-ended fashion.
-
-# Updating
+## Updating
 
 As development for the Import plugin continues, new versions may become available that add additional features and functionality, improve compatibility with newer Grav releases, and generally provide a better user experience. Updating Import is easy, and can be done through Grav's GPM system, as well as manually.
 
-## GPM Update (Preferred)
+### GPM Update (Preferred)
 
 The simplest way to update this plugin is via the [Grav Package Manager (GPM)](http://learn.getgrav.org/advanced/grav-gpm). You can do this with this by navigating to the root directory of your Grav install using your system's Terminal (also called command line) and typing the following:
 
@@ -73,7 +90,7 @@ The simplest way to update this plugin is via the [Grav Package Manager (GPM)](h
 
 This command will check your Grav install to see if your GitHub plugin is due for an update. If a newer release is found, you will be asked whether or not you wish to update. To continue, type `y` and hit enter. The plugin will automatically update and clear Grav's cache.
 
-## Manual Update
+### Manual Update
 
 Manually updating Import is pretty simple. Here is what you will need to do to get this done:
 
@@ -84,6 +101,6 @@ Manually updating Import is pretty simple. Here is what you will need to do to g
 
 > Note: Any changes you have made to any of the files listed under this directory will also be removed and replaced by the new set. Any files located elsewhere (for example a YAML settings file placed in `user/config/plugins`) will remain intact.
 
-# Attribution
+## Attribution
 
 **Special thanks to the Grav team and @rhukster for giving me a starting point and direction for this plugin.**
