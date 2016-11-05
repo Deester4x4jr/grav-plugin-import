@@ -1,3 +1,10 @@
+# v1.0.1
+## 11/05/2016
+
+1. [](#new)
+    * Now supports JSON importing
+    * Can load data from `user/data` folder now as well
+
 # v1.0.0
 ## 01/28/2016
 
