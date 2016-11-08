@@ -23,12 +23,12 @@
                 if (is_array($imports)) {
                     foreach ($imports as $import) {
                         $import = static::sanitize($import);
-                        $key = ltrim($import, 'data:');
+                        $key = str_replace('data:', '', $import);;
                         if (Utils::endswith($import, '.yaml')) {
-                            $key = rtrim($key,'.yaml');
+                            $key = str_replace('.yaml', '', $key);
                             $parsed[$key] = Yaml::parse($this->getContents($import));
                         } elseif (Utils::endswith($import, '.json')) {
-                            $key = rtrim($key,'.json');
+                            $key = str_replace('.json', '', $key);
                             $parsed[$key] = json_decode($this->getContents($import));
                         }
                     }
