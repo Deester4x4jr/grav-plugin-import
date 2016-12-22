@@ -33,7 +33,7 @@
                         }
                     }
                 } else {
-                    $import = static::sanitize($import);
+                    $import = static::sanitize($imports);
                     if (Utils::endswith($import, '.yaml')) {
                         $parsed = Yaml::parse($this->getContents($import));
                     } elseif (Utils::endswith($import, '.json')) {
